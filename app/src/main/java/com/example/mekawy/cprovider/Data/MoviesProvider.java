@@ -7,29 +7,39 @@ import android.content.UriMatcher;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
-import android.util.Log;
 
 
-import com.example.mekawy.cprovider.Data.dbContract.MOST_VOTED_TABLE;
 import com.example.mekawy.cprovider.Data.dbContract.POP_MOVIES_TABLE;
-import com.example.mekawy.cprovider.Data.dbContract.FAV_MOVIES;
 
 public class MoviesProvider extends ContentProvider{
 
     private static dbOpenhelper mhelper;
-
     private static final UriMatcher sUriMatcher=fill_matcher();
+    private static SQLiteQueryBuilder sQueryBuilder;
+
 
     private static final int POP_MOVIES=1;
-    private static final int POP_MOVIES_WITH_ID=2;
+    private static final int POP_MOVIES_WITH_TAG =2;
+
+
+
+    static {
+        sQueryBuilder=new SQLiteQueryBuilder();
+        sQueryBuilder.setTables(POP_MOVIES_TABLE.TABLE_NAME);
+    }
+
+
+    private static final String POP_MOVIE_SELECT_BY_TAG=
+            POP_MOVIES_TABLE.TABLE_NAME+"."+POP_MOVIES_TABLE.OWM_COLUMN_TAG+ " = ? ";
 
 
     private static UriMatcher fill_matcher(){
         UriMatcher mMathcer=new UriMatcher(UriMatcher.NO_MATCH);
         String Authority=dbContract.CONTENT_AUTHORITY;
         mMathcer.addURI(Authority,dbContract.PATH_POP_MOVIES,POP_MOVIES);
-        mMathcer.addURI(Authority,dbContract.PATH_POP_MOVIES+"/#",POP_MOVIES_WITH_ID);//Append number to contenturi
+        mMathcer.addURI(Authority,dbContract.PATH_POP_MOVIES+"/#", POP_MOVIES_WITH_TAG);//Append number to contenturi
         return mMathcer;
     }
 
@@ -39,6 +49,29 @@ public class MoviesProvider extends ContentProvider{
         mhelper =new dbOpenhelper(getContext());
         return true;
     }
+
+
+
+    private Cursor get_Movie_by_TAG(Uri uri,String[] projection,String sort_order){
+        SQLiteDatabase db=mhelper.getReadableDatabase();
+        String Movie_TAG=uri.getPathSegments().get(1);
+
+        String selection =POP_MOVIE_SELECT_BY_TAG;
+        String SelectionArgs[]=new String[]{Movie_TAG};
+
+        Cursor mCur=sQueryBuilder.query(
+                db,
+                projection,
+                selection,
+                SelectionArgs,
+                null,
+                null,
+                sort_order);
+    return mCur;
+    }
+
+
+
 
     @Override
     public Cursor query(Uri uri, String[] projection, String selection, String[] selectionArgs, String sort) {
@@ -55,16 +88,17 @@ public class MoviesProvider extends ContentProvider{
                         null,
                         null,
                         sort);
-            }
-
-            case POP_MOVIES_WITH_ID:{
-
-
                 break;
             }
+
+            case POP_MOVIES_WITH_TAG:{
+                ret_cursor=get_Movie_by_TAG(uri, projection,sort);
+                break;
+            }
+
+            default:throw  new UnsupportedOperationException("unsupported Query "+uri);
         }
-
-
+            ret_cursor.setNotificationUri(getContext().getContentResolver(),uri);
         return ret_cursor;
     }
 
@@ -74,7 +108,7 @@ public class MoviesProvider extends ContentProvider{
         int match_value=sUriMatcher.match(uri);
         switch (match_value){
             case POP_MOVIES:return POP_MOVIES_TABLE.CONTENT_DIR_TYPE;
-            case POP_MOVIES_WITH_ID:return POP_MOVIES_TABLE.CONTENT_ITEM_TYPE;
+            case POP_MOVIES_WITH_TAG:return POP_MOVIES_TABLE.CONTENT_ITEM_TYPE;
             default: throw new UnsupportedOperationException("unsupported type :"+uri);
         }
 

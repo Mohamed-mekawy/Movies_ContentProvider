@@ -1,5 +1,6 @@
 package com.example.mekawy.cprovider;
 
+import android.content.ContentUris;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -23,7 +24,9 @@ public class MainFragActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main_frag);
 
-        Uri t=POP_MOVIES_TABLE.CONTENT_URI;
+
+        Uri d= POP_MOVIES_TABLE.CONTENT_URI.buildUpon().appendPath("51330").build();
+
 
         String projection_col[]={
                 POP_MOVIES_TABLE._ID,
@@ -35,9 +38,9 @@ public class MainFragActivity extends ActionBarActivity {
                 POP_MOVIES_TABLE.OWM_COLUMN_IS_FAVORITE
         };
 
-        Cursor c=getContentResolver().query(t, projection_col, null, null, null);
+        Cursor c=getContentResolver().query(d, projection_col, null, null, null);
 
-        if(c.moveToFirst()) {//move cursor to fisrt row
+      if(c.moveToFirst()) {//move cursor to fisrt row
             do {
                 Log.i("Cursor TAG", "TAG " + Integer.toString(c.getInt(c.getColumnIndex(POP_MOVIES_TABLE.OWM_COLUMN_TAG))));
             } while (c.moveToNext());
