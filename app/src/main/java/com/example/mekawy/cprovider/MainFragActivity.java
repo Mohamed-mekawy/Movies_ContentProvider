@@ -21,6 +21,22 @@ public class MainFragActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main_frag);
+
+        Uri t=POP_MOVIES_TABLE.CONTENT_URI;
+
+        //Content values
+        ContentValues mContent=new ContentValues();
+
+        mContent.put(POP_MOVIES_TABLE.OWM_COLUMN_TAG,5613330);
+        mContent.put(POP_MOVIES_TABLE.OWM_COLUMN_TITLE,"movie name");
+        mContent.put(POP_MOVIES_TABLE.OWM_COLUMN_OVERVIEW,"overview");
+        mContent.put(POP_MOVIES_TABLE.OWM_COLUMN_RELEASE_DATE,"2015");
+        mContent.put(POP_MOVIES_TABLE.OWM_COLUMN_POSTER_PATH,"poster path");
+        mContent.put(POP_MOVIES_TABLE.OWM_COLUMN_VOTE_AVERAGE,21.5);
+        mContent.put(POP_MOVIES_TABLE.OWM_COLUMN_IS_FAVORITE,1);// movie is in favorite list
+
+        Uri returned=getContentResolver().insert(t,mContent);
+        Log.i("APPDEBUG",returned.toString());
     }
 
 
