@@ -158,10 +158,34 @@ public class MoviesProvider extends ContentProvider{
         return ret_val;
     }
 
+
     @Override
-    public int update(Uri uri, ContentValues contentValues, String s, String[] strings) {
-        return 0;
+    public int update(Uri uri, ContentValues contentValues, String selection, String[] selectionArgs) {
+        SQLiteDatabase db=mhelper.getWritableDatabase();
+        int match_val=sUriMatcher.match(uri);
+        int ret_val;
+
+        switch (match_val){
+
+            case POP_MOVIES:{
+                ret_val=db.update(POP_MOVIES_TABLE.TABLE_NAME,contentValues,selection,selectionArgs);
+                break;
+            }
+
+            default:throw new UnsupportedOperationException("unsupported update command : "+uri);
+        }
+        //notify only in case of rows deleted
+        if(ret_val!=0)
+            getContext().getContentResolver().notifyChange(uri,null);
+        return ret_val;
     }
+
+
+
+
+
+
+
 
 
 }
