@@ -25,26 +25,11 @@ public class MainFragActivity extends ActionBarActivity {
         setContentView(R.layout.main_frag);
 
 
-        Uri d= POP_MOVIES_TABLE.CONTENT_URI.buildUpon().appendPath("51330").build();
+        Uri d = POP_MOVIES_TABLE.CONTENT_URI;
 
 
-        String projection_col[]={
-                POP_MOVIES_TABLE._ID,
-                POP_MOVIES_TABLE.OWM_COLUMN_TAG,
-                POP_MOVIES_TABLE.OWM_COLUMN_TITLE,
-                POP_MOVIES_TABLE.OWM_COLUMN_OVERVIEW,
-                POP_MOVIES_TABLE.OWM_COLUMN_RELEASE_DATE,
-                POP_MOVIES_TABLE.OWM_COLUMN_VOTE_AVERAGE,
-                POP_MOVIES_TABLE.OWM_COLUMN_IS_FAVORITE
-        };
-
-        Cursor c=getContentResolver().query(d, projection_col, null, null, null);
-
-      if(c.moveToFirst()) {//move cursor to fisrt row
-            do {
-                Log.i("Cursor TAG", "TAG " + Integer.toString(c.getInt(c.getColumnIndex(POP_MOVIES_TABLE.OWM_COLUMN_TAG))));
-            } while (c.moveToNext());
-        }
+        int del = getContentResolver().delete(d,null,null);
+        Log.i("delete tables rows",Integer.toString(del));
 
     }
 

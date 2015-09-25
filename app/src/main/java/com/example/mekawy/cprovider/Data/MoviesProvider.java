@@ -111,7 +111,6 @@ public class MoviesProvider extends ContentProvider{
             case POP_MOVIES_WITH_TAG:return POP_MOVIES_TABLE.CONTENT_ITEM_TYPE;
             default: throw new UnsupportedOperationException("unsupported type :"+uri);
         }
-
     }
 
     @Override
@@ -136,9 +135,27 @@ public class MoviesProvider extends ContentProvider{
     }
 
     @Override
-    public int delete(Uri uri, String s, String[] strings) {
+    public int delete(Uri uri, String selection, String[] selectionArgs) {
+        SQLiteDatabase db=mhelper.getWritableDatabase();
+        int match_val=sUriMatcher.match(uri);
+        int ret_val;
 
-        return 0;
+        if(selection==null)
+            selection="1"; //return the number of rows deleted in case of null selection
+
+        switch (match_val){
+
+            case POP_MOVIES:{
+                ret_val=db.delete(POP_MOVIES_TABLE.TABLE_NAME,selection,selectionArgs);
+                break;
+            }
+
+            default:throw new UnsupportedOperationException("unsupported delete command : "+uri);
+        }
+        //notify only in case of rows deleted
+        if(ret_val!=0)
+            getContext().getContentResolver().notifyChange(uri,null);
+        return ret_val;
     }
 
     @Override
