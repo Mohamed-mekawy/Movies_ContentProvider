@@ -83,7 +83,6 @@ public class dbContract {
         public final static String CONTENT_DIR_TYPE=
                 ContentResolver.CURSOR_DIR_BASE_TYPE + "/" +    CONTENT_AUTHORITY   +  "/" +    PATH_FAV_MOVIES;
 
-
         public static final String TABLE_NAME = "fav_movies";
 
         public static final String OWM_COLUMN_TAG = "TAG";
