@@ -1,9 +1,15 @@
 package com.example.mekawy.cprovider;
 
+import android.database.sqlite.SQLiteOpenHelper;
+import android.provider.ContactsContract;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+
+import com.example.mekawy.cprovider.Data.dbContract;
+import com.example.mekawy.cprovider.Data.dbOpenhelper;
 
 
 public class MainFragActivity extends ActionBarActivity {

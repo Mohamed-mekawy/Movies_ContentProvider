@@ -72,7 +72,7 @@ public class dbContract {
 
     }
 
-    public static class PATH_FAV_MOVIES implements BaseColumns {
+    public static class FAV_MOVIES implements BaseColumns {
 
         public static final Uri CONTENT_URI =
                 BASE_CONTENT_URI.buildUpon().appendPath(PATH_FAV_MOVIES).build();
