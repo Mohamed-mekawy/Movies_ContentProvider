@@ -29,7 +29,7 @@ public class MoviesProvider extends ContentProvider{
         UriMatcher mMathcer=new UriMatcher(UriMatcher.NO_MATCH);
         String Authority=dbContract.CONTENT_AUTHORITY;
         mMathcer.addURI(Authority,dbContract.PATH_POP_MOVIES,POP_MOVIES);
-        mMathcer.addURI(Authority,dbContract.PATH_POP_MOVIES+"/#",POP_MOVIES_WITH_ID);
+        mMathcer.addURI(Authority,dbContract.PATH_POP_MOVIES+"/#",POP_MOVIES_WITH_ID);//Append number to contenturi
         return mMathcer;
     }
 
@@ -41,8 +41,31 @@ public class MoviesProvider extends ContentProvider{
     }
 
     @Override
-    public Cursor query(Uri uri, String[] strings, String s, String[] strings1, String s1) {
-        return null;
+    public Cursor query(Uri uri, String[] projection, String selection, String[] selectionArgs, String sort) {
+        SQLiteDatabase db=mhelper.getReadableDatabase();
+        int match_val=sUriMatcher.match(uri);
+        Cursor ret_cursor = null;
+        switch (match_val){
+
+            case POP_MOVIES:{
+                ret_cursor=db.query(POP_MOVIES_TABLE.TABLE_NAME,
+                        projection,
+                        selection,
+                        selectionArgs,
+                        null,
+                        null,
+                        sort);
+            }
+
+            case POP_MOVIES_WITH_ID:{
+
+
+                break;
+            }
+        }
+
+
+        return ret_cursor;
     }
 
     @Override
@@ -51,7 +74,7 @@ public class MoviesProvider extends ContentProvider{
         int match_value=sUriMatcher.match(uri);
         switch (match_value){
             case POP_MOVIES:return POP_MOVIES_TABLE.CONTENT_DIR_TYPE;
-
+            case POP_MOVIES_WITH_ID:return POP_MOVIES_TABLE.CONTENT_ITEM_TYPE;
             default: throw new UnsupportedOperationException("unsupported type :"+uri);
         }
 

@@ -1,6 +1,7 @@
 package com.example.mekawy.cprovider;
 
 import android.content.ContentValues;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.net.Uri;
@@ -24,19 +25,24 @@ public class MainFragActivity extends ActionBarActivity {
 
         Uri t=POP_MOVIES_TABLE.CONTENT_URI;
 
-        //Content values
-        ContentValues mContent=new ContentValues();
+        String projection_col[]={
+                POP_MOVIES_TABLE._ID,
+                POP_MOVIES_TABLE.OWM_COLUMN_TAG,
+                POP_MOVIES_TABLE.OWM_COLUMN_TITLE,
+                POP_MOVIES_TABLE.OWM_COLUMN_OVERVIEW,
+                POP_MOVIES_TABLE.OWM_COLUMN_RELEASE_DATE,
+                POP_MOVIES_TABLE.OWM_COLUMN_VOTE_AVERAGE,
+                POP_MOVIES_TABLE.OWM_COLUMN_IS_FAVORITE
+        };
 
-        mContent.put(POP_MOVIES_TABLE.OWM_COLUMN_TAG,5613330);
-        mContent.put(POP_MOVIES_TABLE.OWM_COLUMN_TITLE,"movie name");
-        mContent.put(POP_MOVIES_TABLE.OWM_COLUMN_OVERVIEW,"overview");
-        mContent.put(POP_MOVIES_TABLE.OWM_COLUMN_RELEASE_DATE,"2015");
-        mContent.put(POP_MOVIES_TABLE.OWM_COLUMN_POSTER_PATH,"poster path");
-        mContent.put(POP_MOVIES_TABLE.OWM_COLUMN_VOTE_AVERAGE,21.5);
-        mContent.put(POP_MOVIES_TABLE.OWM_COLUMN_IS_FAVORITE,1);// movie is in favorite list
+        Cursor c=getContentResolver().query(t, projection_col, null, null, null);
 
-        Uri returned=getContentResolver().insert(t,mContent);
-        Log.i("APPDEBUG",returned.toString());
+        if(c.moveToFirst()) {//move cursor to fisrt row
+            do {
+                Log.i("Cursor TAG", "TAG " + Integer.toString(c.getInt(c.getColumnIndex(POP_MOVIES_TABLE.OWM_COLUMN_TAG))));
+            } while (c.moveToNext());
+        }
+
     }
 
 
