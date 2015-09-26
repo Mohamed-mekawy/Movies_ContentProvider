@@ -4,11 +4,10 @@ package com.example.mekawy.cprovider.Data;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.util.Log;
 
 
 import com.example.mekawy.cprovider.Data.dbContract.MOST_VOTED_TABLE;
-import com.example.mekawy.cprovider.Data.dbContract.FAV_MOVIES;
+import com.example.mekawy.cprovider.Data.dbContract.FAV_MOVIES_TABLE;
 import com.example.mekawy.cprovider.Data.dbContract.POP_MOVIES_TABLE;
 
 public class dbOpenhelper extends SQLiteOpenHelper{
@@ -47,14 +46,14 @@ public class dbOpenhelper extends SQLiteOpenHelper{
                         dbContract.MOST_VOTED_TABLE.OWM_COLUMN_IS_FAVORITE+ " INTEGER NOT NULL);";
 
         final String SQL_FAV_MOVIES_TABLE=
-                "CREATE TABLE "+ dbContract.FAV_MOVIES.TABLE_NAME +" ( "+
-                        dbContract.FAV_MOVIES._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "+
-                        dbContract.FAV_MOVIES.OWM_COLUMN_TAG + " INTEGER UNIQUE NOT NULL, " +
-                        dbContract.FAV_MOVIES.OWM_COLUMN_TITLE + " TEXT NOT NULL, " +
-                        dbContract.FAV_MOVIES.OWM_COLUMN_OVERVIEW +" TEXT NOT NULL, " +
-                        dbContract.FAV_MOVIES.OWM_COLUMN_RELEASE_DATE+ " TEXT NOT NULL, "+
-                        dbContract.FAV_MOVIES.OWM_COLUMN_POSTER_PATH + " TEXT NOT NULL, "+
-                        dbContract.FAV_MOVIES.OWM_COLUMN_VOTE_AVERAGE+ " REAL NOT NULL);";
+                "CREATE TABLE "+ FAV_MOVIES_TABLE.TABLE_NAME +" ( "+
+                        FAV_MOVIES_TABLE._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "+
+                        FAV_MOVIES_TABLE.OWM_COLUMN_TAG + " INTEGER UNIQUE NOT NULL, " +
+                        FAV_MOVIES_TABLE.OWM_COLUMN_TITLE + " TEXT NOT NULL, " +
+                        FAV_MOVIES_TABLE.OWM_COLUMN_OVERVIEW +" TEXT NOT NULL, " +
+                        FAV_MOVIES_TABLE.OWM_COLUMN_RELEASE_DATE+ " TEXT NOT NULL, "+
+                        FAV_MOVIES_TABLE.OWM_COLUMN_POSTER_PATH + " TEXT NOT NULL, "+
+                        FAV_MOVIES_TABLE.OWM_COLUMN_VOTE_AVERAGE+ " REAL NOT NULL);";
 
         sqLiteDatabase.execSQL(SQL_POP_MOVIES_TABLE);
         sqLiteDatabase.execSQL(SQL_FAV_MOVIES_TABLE);
@@ -65,7 +64,7 @@ public class dbOpenhelper extends SQLiteOpenHelper{
     public void onUpgrade(SQLiteDatabase sqLiteDatabase, int oldversion, int newversion) {
         sqLiteDatabase.execSQL("DROP TABLE IF EXISTS "+POP_MOVIES_TABLE.TABLE_NAME);
         sqLiteDatabase.execSQL("DROP TABLE IF EXISTS "+MOST_VOTED_TABLE.TABLE_NAME);
-        sqLiteDatabase.execSQL("DROP TABLE IF EXISTS "+FAV_MOVIES.TABLE_NAME);
+        sqLiteDatabase.execSQL("DROP TABLE IF EXISTS "+ FAV_MOVIES_TABLE.TABLE_NAME);
         onCreate(sqLiteDatabase);
     }
 
