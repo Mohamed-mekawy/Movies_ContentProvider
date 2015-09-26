@@ -146,7 +146,7 @@ public class MoviesProvider extends ContentProvider{
         switch (match_val){
 
             case POP_MOVIES:{
-                ret_val=db.delete(POP_MOVIES_TABLE.TABLE_NAME,selection,selectionArgs);
+                ret_val=db.delete(POP_MOVIES_TABLE.TABLE_NAME, selection, selectionArgs);
                 break;
             }
 
@@ -180,12 +180,29 @@ public class MoviesProvider extends ContentProvider{
         return ret_val;
     }
 
+    @Override
+    public int bulkInsert(Uri uri, ContentValues[] values) {
 
+        SQLiteDatabase db=mhelper.getWritableDatabase();
+        int match_val=sUriMatcher.match(uri);
+        int ret_val;
+        ret_val=0;
 
+        switch (match_val){
 
-
-
-
-
+            case POP_MOVIES:{
+                    db.beginTransaction();
+                    for(ContentValues value:values){
+                        long ret=db.insert(POP_MOVIES_TABLE.TABLE_NAME,null,value);
+                        if(ret!=-1)ret_val++;
+                    }
+                    db.setTransactionSuccessful();
+                    db.endTransaction();
+                    getContext().getContentResolver().notifyChange(uri,null);
+                    return ret_val;
+            }
+            default :throw new UnsupportedOperationException("unsupported bulk insertion, "+uri);
+        }
+    }
 
 }
